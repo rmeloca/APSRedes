@@ -5,14 +5,15 @@
  */
 
 /* 
- * File:   bitStuffing.c
+ * File:   byteCounting.c
  * Author: romulo
  *
- * Created on December 4, 2015, 2:37 PM
+ * Created on December 4, 2015, 3:07 PM
  */
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <stdint.h>
 
 /*
@@ -22,7 +23,14 @@ int main(int argc, char** argv) {
     FILE* file;
     uint8_t iterator;
 
-    file = fopen("bitStuffing.txt", "r");
+    /*
+     * Gerar tamanho de quadro aleatório entre 64 e 1500bytes
+     */
+    
+    /*
+     * ida
+     */
+    file = fopen("byteCounting.txt", "r");
 
     while (1) {
         iterator = fgetc(file);
@@ -33,6 +41,11 @@ int main(int argc, char** argv) {
     }
     printf("\n");
 
+    
+    
+    /*
+     * volta
+     */
     return (EXIT_SUCCESS);
 }
 

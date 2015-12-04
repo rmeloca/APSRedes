@@ -35,7 +35,9 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/bitStuffing.o
+	${OBJECTDIR}/bitStuffing.o \
+	${OBJECTDIR}/byteCounting.o \
+	${OBJECTDIR}/byteStuffing.o
 
 
 # C Compiler Flags
@@ -66,6 +68,16 @@ ${OBJECTDIR}/bitStuffing.o: bitStuffing.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/bitStuffing.o bitStuffing.c
+
+${OBJECTDIR}/byteCounting.o: byteCounting.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/byteCounting.o byteCounting.c
+
+${OBJECTDIR}/byteStuffing.o: byteStuffing.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/byteStuffing.o byteStuffing.c
 
 # Subprojects
 .build-subprojects:

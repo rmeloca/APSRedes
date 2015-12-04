@@ -5,33 +5,19 @@
  */
 
 /* 
- * File:   bitStuffing.c
+ * File:   byteStuffing.c
  * Author: romulo
  *
- * Created on December 4, 2015, 2:37 PM
+ * Created on December 4, 2015, 3:06 PM
  */
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>
 
 /*
  * 
  */
 int main(int argc, char** argv) {
-    FILE* file;
-    uint8_t iterator;
-
-    file = fopen("bitStuffing.txt", "r");
-
-    while (1) {
-        iterator = fgetc(file);
-        if (feof(file)) {
-            break;
-        }
-        printf("%c", iterator);
-    }
-    printf("\n");
 
     return (EXIT_SUCCESS);
 }
