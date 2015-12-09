@@ -14,38 +14,83 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
-#include <stdint.h>
+#include <string.h>
 
-/*
- * 
- */
-int main(int argc, char** argv) {
-    FILE* file;
-    uint8_t iterator;
+int converter() {
+    FILE* input;
+    FILE* output;
+    uint8_t* buffer;
+    uint8_t frameSize;
 
-    /*
-     * Gerar tamanho de quadro aleatório entre 64 e 1500bytes
-     */
-    
-    /*
-     * ida
-     */
-    file = fopen("byteCounting.txt", "r");
-
+    input = fopen("input", "r");
+    output = fopen("outputStuffed", "w");
+    buffer = (uint8_t*) calloc(256, sizeof (uint8_t));
+    if (input == NULL) {
+        return EXIT_FAILURE;
+    }
     while (1) {
-        iterator = fgetc(file);
-        if (feof(file)) {
+        frameSize = 64 + (rand() % 191);
+        frameSize = fread(buffer, sizeof (uint8_t), frameSize, input);
+        frameSize++;
+        fwrite(&frameSize, sizeof (uint8_t), 1, output);
+        fwrite(buffer, sizeof (uint8_t), frameSize, output);
+        if (feof(input)) {
             break;
         }
-        printf("%c", iterator);
     }
-    printf("\n");
 
-    
-    
-    /*
-     * volta
-     */
-    return (EXIT_SUCCESS);
+    fclose(input);
+    fclose(output);
+
+    return EXIT_SUCCESS;
 }
 
+int desconverter() {
+    FILE* input;
+    FILE* output;
+    uint8_t* buffer;
+    uint8_t frameSize;
+
+    input = fopen("outputStuffed", "r");
+    output = fopen("output", "w");
+    buffer = (uint8_t*) calloc(256, sizeof (uint8_t));
+    if (input == NULL) {
+        return EXIT_FAILURE;
+    }
+    while (1) {
+        fread(&frameSize, sizeof (uint8_t), 1, input);
+        if (feof(input)) {
+            break;
+        }
+        fread(buffer, sizeof (uint8_t), frameSize, input);
+        fwrite(buffer, sizeof (uint8_t), frameSize, output);
+    }
+
+    fclose(input);
+    fclose(output);
+    return EXIT_SUCCESS;
+}
+
+void imprimir() {
+    FILE* input;
+    uint8_t buffer;
+
+    input = fopen("output", "r");
+
+    while (1) {
+        fread(&buffer, sizeof (uint8_t), 1, input);
+        if (feof(input)) {
+            break;
+        }
+        printf("%c", buffer);
+    }
+
+    fclose(input);
+}
+
+int main(int argc, char** argv) {
+    converter();
+    desconverter();
+    imprimir();
+    return EXIT_SUCCESS;
+}

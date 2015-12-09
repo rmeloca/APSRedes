@@ -12,4 +12,4 @@ all:
 clean:
 	rm -rf *.o
 mrproper: clean
-	rm -rf bitStuffing
+	rm -rf bitStuffing byteStuffing byteCounting
