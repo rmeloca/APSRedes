@@ -84,8 +84,8 @@ int converter() {
             } else if (buffer == '0') {
                 counting = 0;
             }
-            if (counting == 5) {
-                fwrite("1", sizeof (uint8_t), 1, output);
+            if (counting == 6) {
+                fwrite("0", sizeof (uint8_t), 1, output);
                 counting = 0;
             }
             fwrite(&buffer, sizeof (uint8_t), 1, output);
@@ -100,15 +100,23 @@ int converter() {
 
     byte = (uint8_t*) calloc(8, sizeof (uint8_t));
 
-    while (1) {
-        fread(byte, sizeof (uint8_t), 8, input);
-        if (feof(input)) {
-            break;
+    fseek(input, 0, SEEK_END);
+    int tamanho = ftell(input);
+    fseek(input, 0, SEEK_SET);
+
+    while (tamanho >= 0) {
+        if (tamanho < 8) {
+            while (tamanho--) {
+                fread(&buffer, sizeof (uint8_t), 1, input);
+                byte[tamanho] = buffer;
+            }
+        } else {
+            fread(byte, sizeof (uint8_t), 8, input);
         }
         buffer = bintochar((char*) byte);
         fwrite(&buffer, sizeof (uint8_t), 1, output);
+        tamanho -= 8;
     }
-
     fclose(input);
     fclose(output);
 
@@ -123,8 +131,8 @@ int desconverter() {
     int counting = 0;
     int continuar = 1;
 
-    input = fopen("outputStuffed", "r");
-    output = fopen("conversaoIntermediaria", "w");
+    input = fopen("a", "r");
+    output = fopen("a", "w");
 
     if (input == NULL) {
         return EXIT_FAILURE;
@@ -139,16 +147,17 @@ int desconverter() {
 
     fclose(input);
     fclose(output);
-
-    input = fopen("conversaoIntermediaria", "r");
+    int x = -7;
+    input = fopen("outputStuffedIntermediaria", "r");
     output = fopen("conversaoDesestufada", "w");
     while (continuar) {
         fread(&buffer, sizeof (uint8_t), 8, input);
-        if (feof(input)) {
-            break;
-        }
         while (1) {
             fread(&buffer, sizeof (uint8_t), 1, input);
+            if (feof(input)) {
+                continuar = 0;
+                break;
+            }
             if (buffer == '1') {
                 counting++;
             } else if (buffer == '0') {
@@ -156,21 +165,23 @@ int desconverter() {
             }
             if (counting == 5) {
                 fread(&buffer, sizeof (uint8_t), 1, input);
+                counting = 0;
                 if (buffer == '1') {
                     fread(&buffer, sizeof (uint8_t), 1, input); //0
+                    fseek(output, x, SEEK_CUR); //apaga flag da saida
                     break;
-                    fread(&buffer, sizeof (uint8_t), 8, input); //flag
-                    fseek(output, -7, SEEK_CUR); //apaga flag da saida
                 }
                 fread(&buffer, sizeof (uint8_t), 1, input);
-                counting = 0;
             }
             fwrite(&buffer, sizeof (uint8_t), 1, output);
         }
     }
 
+    int tamanho = ftell(output);
+    tamanho -= 7;
     fclose(input);
     fclose(output);
+    truncate("conversaoDesestufada", tamanho);
 
     input = fopen("conversaoDesestufada", "r");
     output = fopen("output", "w");

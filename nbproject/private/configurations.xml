@@ -5,6 +5,8 @@
       <in>bitStuffing.c</in>
       <in>byteCounting.c</in>
       <in>byteStuffing.c</in>
+      <in>info_raw_ip.c</in>
+      <in>marco.c</in>
     </df>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
